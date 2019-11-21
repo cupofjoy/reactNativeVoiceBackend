@@ -2,6 +2,8 @@ const express = require('express');
 const Analyser = require('audio-analyser');
 const toUintArray = require('base64-to-uint8array');
 
+const { addFrequencyToFirebase } = require('../firebase/firebase.utils.js')
+
 const router = express.Router();
 
 router.post('/', (req, res) => {
@@ -36,7 +38,11 @@ router.post('/', (req, res) => {
 
   // Current frequency data into a Float32Array pass into it
   let data = analyser.getFloatTimeDomainData(arr);
-  console.log('analyser', data)
+  console.log('analyser', data);
+
+  // add data to firebase
+  addFrequencyToFirebase(data);
+  
   res.json({message: 'message received'})
 });
 
